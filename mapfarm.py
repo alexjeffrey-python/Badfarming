@@ -4,14 +4,17 @@ class FarmMap:
         self.x = 0
         self.y = 0
 
-        self.farm = [["BRN", "·", "·", "·", "·"],
-                     ["BZR", "·", "·", "·", "·"],
-                     ["   ", "·", "·", "·", "·"],
-                     ["   ", "·", "·", "·", "·"],
-                     ["   ", "·", "·", "·", "·"]]
+        self.farm = [["BRN", ".", ".", ".", "."],
+                     ["BZR", ".", ".", ".", "."],
+                     ["   ", ".", ".", ".", "."],
+                     ["   ", ".", ".", ".", "."],
+                     ["   ", ".", ".", ".", "."]]
 
         self.maxHeight = len(self.farm) - 1
         self.maxWidth = len(self.farm[0]) - 1
+        self.plantable = self.farm[self.y][self.x] == "."
+
+
 
     def up(self):
         self.y -= 1
@@ -39,6 +42,11 @@ class FarmMap:
                 if self.x == column and self.y == row:
                     print("[" + self.farm[row][column] + "]", end=" ")
                 else:
-                    print(" " + self.farm[row][column]  + " ", end=" ")
+                    print(" " + self.farm[row][column] + " ", end=" ")
             print()
         print(self.x, self.y)
+
+
+
+    def plantstuff(self):
+        self.farm[self.y][self.x] = "v"
