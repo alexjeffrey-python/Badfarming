@@ -1,9 +1,4 @@
-# TODO get a funtioning economy 1/2
-# TODO growing seeds 1/2
-# TODO harvesting
-# TODO buy new farms
 # plant types vV, wW, oO
-#
 from mapfarm import FarmMap
 from inv import Inv
 
@@ -13,19 +8,25 @@ thisInv = Inv()
 
 def newfarm():
     if thisInv.coins >= 25 and thisFarm.farmnumber == 0:
-        thisInv.coins = 0
-        thisFarm.farmnumber = 1
+        thisInv.coins -= 25
+        thisFarm.farmnumber += 1
         thisFarm.farmupdate()
+        print("You got a new and better farm! The next one costs 75 coins.")
     elif thisInv.coins >= 75 and thisFarm.farmnumber == 1:
-        thisInv.coins = 0
-        pass
+        thisInv.coins -= 75
+        thisFarm.farmnumber += 1
+        thisFarm.farmupdate()
+        print("You got a new and better farm!")
 
 
-def plantseed():
+def plantseedv():
     thisFarm.plantable = thisFarm.farm[thisFarm.y][thisFarm.x] == thisFarm.soil
     if thisInv.seed > 0 and thisFarm.plantable:
         thisInv.seed -= 1
         thisFarm.plantstuff()
+        print("Planted!")
+    else:
+        print("This does not look like a good place for seeds, or did you not have any? (plant in *)")
 
 
 def mony():
@@ -37,12 +38,63 @@ def sed():
     thisInv.seed += 999
     print("Cheater.")
 
+def maxfarm():
+    thisFarm.farmnumber = 1
+    print("Cheater.")
 
-def buyseed():
-    if thisFarm.x == 0 and thisFarm.y == 1:
-        thisInv.coins -= 1
-        thisInv.seed += 1
+def buyv():
+    if thisFarm.farm[thisFarm.y][thisFarm.x] == thisFarm.bazaar:
+        thisInv.seed += thisInv.coins
+        thisInv.coins = 0
+        print("Cha-ching!")
+    else:
+        print("Go to the bazaar (BZR) to buy seeds.")
 
+
+def reap():
+    if thisFarm.harvest():
+        thisInv.Vstalks += 1
+        print("*Slice!*")
+    else:
+        print("It doesnt look ready to harvest, or did you plant it? (wait until it is fully grown.)")
+
+
+def profits():
+    if thisFarm.farm[thisFarm.y][thisFarm.x] == thisFarm.bazaar:
+        thisInv.coins += 2 * thisInv.Vstalks
+        thisInv.Vstalks = 0
+        print("Cha-ching!")
+    else:
+        print("Go to the bazaar (BZR) to sell crops.")
+
+
+def nothing():
+    pass
+
+
+def cropinfo():
+    print("""(.vV), V is the first crop people recommend for newbie farmers such as yourself.\
+[Grows in 6 turns, costs 1, crop is worth 2.]""")
+
+def inputs():
+    print("""You are [].
+You have three important things, coins, seeds, and crops.
+Coins are money, they allow you to buy things such as farms and seeds.
+Seeds are what you put in the ground, they can grow into things sucg as crops.
+Crops are what you sell for coins, they are harvested from fully grown seeds, if you bring crops into the bazaar,\
+you will get a price.
+COMMANDS:
+'p' or 'help', brings up this menu.
+'o' or 'crop help', tells you whst each crop is and what it does.
+'w' or 'up', moves you up.
+'a' or 'left', moves you left.
+'s' or 'down', moves you down.
+'d' or 'right', moves you right.
+'f' or 'harvest', harvests the crop you are on.
+'eX' or 'plantX', plants a crop of type X on the tile you are on.
+'c' or 'sell', sells ALL crops.
+'vX' or 'buyX', buys ALL crops of type X as you can.
+'g' or 'upgrade', upgrades your farm. (hint, the next farm costs 25 coins) """)
 
 def cmds():
     actionlist = {"up": thisFarm.up,
@@ -53,11 +105,20 @@ def cmds():
                   "a": thisFarm.left,
                   "right": thisFarm.right,
                   "d": thisFarm.right,
-                  "buy": buyseed,
-                  "plant": plantseed,
+                  "harvest": reap,
+                  "f": reap,
+                  "buy v": buyv,
+                  "sell": profits,
+                  "plantv": plantseedv,
+                  "ev": plantseedv,
                   "upgrade": newfarm,
+                  "": nothing,
+                  "wait": nothing,
+                  "help": inputs,
+                  "crop help": cropinfo,
                   "tax evasion": mony,
-                  "seedbank": sed}
+                  "seedy places": sed,
+                  "tricked out": maxfarm}
     action: str = input("What do you do? ")
     action = action.lower()
     if action not in actionlist.keys():
@@ -65,10 +126,11 @@ def cmds():
     else:
         actionlist.get(action)()
 
-
+inputs()
 thisFarm.farmupdate()
 while True:
+    print("\n")
     thisFarm.render()
-    print(f"You have {thisInv.coins} coin(s) and {thisInv.seed} seed(s).")
+    print(f"You have {thisInv.coins} coin(s), {thisInv.seed} seed(s), and {thisInv.Vstalks} V stalk(s).")
     cmds()
     thisFarm.growself()

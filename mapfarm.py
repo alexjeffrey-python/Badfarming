@@ -9,8 +9,8 @@ class FarmMap:
         self.barn: str = ""
         self.bazaar: str = ""
         self.fence: str = ""
-        self.maxHeight: int = len(self.farm) - 1
-        self.maxWidth: int = len(self.farm[0]) - 1
+        self.maxheight: int = len(self.farm) - 1
+        self.maxwidth: int = len(self.farm[0]) - 1
         self.plantable: bool = self.farm[self.y][self.x] == "."
         self.globetime: int = 0
         self.planttime: list = []
@@ -19,22 +19,22 @@ class FarmMap:
     def up(self):
         self.y -= 1
         if self.y < 0:
-            self.y = self.maxHeight
+            self.y = self.maxheight
 
     def down(self):
         self.y += 1
-        if self.y > self.maxHeight:
+        if self.y > self.maxheight:
             self.y = 0
 
     def right(self):
         self.x += 1
-        if self.x > self.maxWidth:
+        if self.x > self.maxwidth:
             self.x = 0
 
     def left(self):
         self.x -= 1
         if self.x < 0:
-            self.x = self.maxWidth
+            self.x = self.maxwidth
 
     def render(self):
         for row in range(0, len(self.farm)):
@@ -44,7 +44,14 @@ class FarmMap:
                 else:
                     print(" " + self.farm[row][column] + " ", end=" ")
             print()
-        print(self.x, self.y)
+        print(f"Your coords are ({self.x}, {self.maxheight - self.y}).")
+
+    def harvest(self):
+        if self.farm[self.y][self.x] == "V":
+            self.farm[self.y][self.x] = self.soil
+            return True
+        else:
+            return False
 
     def farmupdate(self):
         if self.farmnumber == 0:
@@ -60,8 +67,8 @@ class FarmMap:
                          [self.fence, self.soil, self.soil, self.soil, self.soil],
                          [self.fence, self.soil, self.soil, self.soil, self.soil]]
 
-            self.maxHeight = len(self.farm) - 1
-            self.maxWidth = len(self.farm[0]) - 1
+            self.maxheight = len(self.farm) - 1
+            self.maxwidth = len(self.farm[0]) - 1
         elif self.farmnumber == 1:
             self.x = 0
             self.y = 1
@@ -74,8 +81,8 @@ class FarmMap:
                          [self.bazaar, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil],
                          [self.fence, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil],
                          ]
-            self.maxHeight = len(self.farm) - 1
-            self.maxWidth = len(self.farm[0]) - 1
+            self.maxheight = len(self.farm) - 1
+            self.maxwidth = len(self.farm[0]) - 1
 
     def plantstuff(self):
         self.farm[self.y][self.x] = "."
@@ -83,7 +90,7 @@ class FarmMap:
 
     def growself(self):
         self.globetime += 1
-        for plant, x, y in self.planttime:
+        for plant, x, y, type in self.planttime:
             if plant == self.globetime - self.growtime / 2:
                 self.farm[y][x] = "v"
 
