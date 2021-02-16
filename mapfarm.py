@@ -15,6 +15,9 @@ class FarmMap:
         self.globetime: int = 0
         self.planttime: list = []
         self.growtime: int = 8
+        self.planttype: str = ""
+
+
 
     def up(self):
         self.y -= 1
@@ -59,7 +62,7 @@ class FarmMap:
             self.y = 0
             self.barn = "BRN"
             self.bazaar = "BZR"
-            self.fence = "|  "
+            self.fence = "│  "
             self.soil = "*"
             self.farm = [[self.barn, self.soil, self.soil, self.soil, self.soil],
                          [self.bazaar, self.soil, self.soil, self.soil, self.soil],
@@ -86,13 +89,14 @@ class FarmMap:
 
     def plantstuff(self):
         self.farm[self.y][self.x] = "."
-        self.planttime.append([self.globetime, self.x, self.y])
+        self.planttime.append([self.globetime, self.x, self.y, self.planttype])
 
     def growself(self):
         self.globetime += 1
         for plant, x, y, type in self.planttime:
-            if plant == self.globetime - self.growtime / 2:
-                self.farm[y][x] = "v"
+            if type == "v":
+                if plant == self.globetime - self.growtime / 2:
+                    self.farm[y][x] = "v"
 
-            if plant == self.globetime - self.growtime:
-                self.farm[y][x] = "V"
+                if plant == self.globetime - self.growtime:
+                    self.farm[y][x] = "V"
