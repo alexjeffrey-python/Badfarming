@@ -9,6 +9,7 @@ class FarmMap:
         self.barn: str = ""
         self.bazaar: str = ""
         self.fence: str = ""
+        self.gate: str = ""
         self.maxheight: int = len(self.farm) - 1
         self.maxwidth: int = len(self.farm[0]) - 1
         self.plantable: bool = self.farm[self.y][self.x] == "."
@@ -16,8 +17,6 @@ class FarmMap:
         self.planttime: list = []
         self.growtime: int = 8
         self.planttype: str = ""
-
-
 
     def up(self):
         self.y -= 1
@@ -40,6 +39,7 @@ class FarmMap:
             self.x = self.maxwidth
 
     def render(self):
+        print("╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼")
         for row in range(0, len(self.farm)):
             for column in range(0, len(self.farm[row])):
                 if self.x == column and self.y == row:
@@ -48,10 +48,11 @@ class FarmMap:
                     print(" " + self.farm[row][column] + " ", end=" ")
             print()
         print(f"Your coords are ({self.x}, {self.maxheight - self.y}).")
+        print("╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼╼")
+        print("")
 
     def harvest(self):
-        if self.farm[self.y][self.x] == "V":
-            self.farm[self.y][self.x] = self.soil
+        if self.farm[self.y][self.x] == ("V" or "W" or "O"):
             return True
         else:
             return False
@@ -62,12 +63,13 @@ class FarmMap:
             self.y = 0
             self.barn = "BRN"
             self.bazaar = "BZR"
-            self.fence = "│  "
+            self.fence = " │ "
+            self.gate = " ╳ "
             self.soil = "*"
             self.farm = [[self.barn, self.soil, self.soil, self.soil, self.soil],
                          [self.bazaar, self.soil, self.soil, self.soil, self.soil],
                          [self.fence, self.soil, self.soil, self.soil, self.soil],
-                         [self.fence, self.soil, self.soil, self.soil, self.soil],
+                         [self.gate, self.soil, self.soil, self.soil, self.soil],
                          [self.fence, self.soil, self.soil, self.soil, self.soil]]
 
             self.maxheight = len(self.farm) - 1
@@ -77,15 +79,32 @@ class FarmMap:
             self.y = 1
             self.barn = "BRN"
             self.bazaar = "BZR"
-            self.fence = "|| "
+            self.fence = "|╳|"
+            self.gate = "I-I"
             self.soil = "+"
-            self.farm = [[self.fence, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil],
+            self.farm = [[self.gate, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil],
                          [self.barn, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil],
                          [self.bazaar, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil],
-                         [self.fence, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil],
-                         ]
-            self.maxheight = len(self.farm) - 1
-            self.maxwidth = len(self.farm[0]) - 1
+                         [self.soil, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil, self.soil]]
+
+        elif self.farmnumber == 2:
+            self.x = 0
+            self.y = 4
+            self.barn = "BIGBRN"
+            self.bazaar = "BAZAAR"
+            self.fence = "|+)(+|"
+            self.gate = "|-()-|"
+            self.soil = "÷"
+            self.farm = [[self.fence, self.soil, self.soil, self.soil, self.soil, self.soil, self.fence],
+                         [self.gate, self.soil, self.soil, self.soil, self.soil, self.soil, self.fence],
+                         [self.fence, self.soil, self.soil, self.soil, self.soil, self.soil, self.fence],
+                         [self.bazaar, self.soil, self.soil, self.soil, self.soil, self.soil, self.bazaar],
+                         [self.barn, self.soil, self.soil, self.soil, self.soil, self.soil, self.fence],
+                         [self.fence, self.soil, self.soil, self.soil, self.soil, self.soil, self.gate],
+                         [self.fence, self.soil, self.soil, self.soil, self.soil, self.soil, self.fence]]
+
+        self.maxheight = len(self.farm) - 1
+        self.maxwidth = len(self.farm[0]) - 1
 
     def plantstuff(self):
         self.farm[self.y][self.x] = "."
@@ -93,10 +112,8 @@ class FarmMap:
 
     def growself(self):
         self.globetime += 1
-        for plant, x, y, type in self.planttime:
-            if type == "v":
-                if plant == self.globetime - self.growtime / 2:
-                    self.farm[y][x] = "v"
-
-                if plant == self.globetime - self.growtime:
-                    self.farm[y][x] = "V"
+        for plant, x, y, breed in self.planttime:
+            if plant == self.globetime - self.growtime / 2:
+                self.farm[y][x] = breed.lower
+            elif plant == self.globetime - self.growtime:
+                self.farm[y][x] = breed.upper
