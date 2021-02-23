@@ -223,9 +223,9 @@ thisFarm.farmupdate()
 while True:
     print("")
     thisFarm.render()
-    print(f"""═══════Finance═══════════V═Plant══════W=Plant═════O Plant
+    print(f"""═══════Finance═══════════V═Plant══════W=Plant═════O═Plant═══════════════
 You have {thisInv.coins} coin(s).    │ {thisInv.Vseed} seed(s). │ {thisInv.Wseed} seed(s).│ {thisInv.Wseed} seed(s).           │ 
-Your farm is tier {thisFarm.farmnumber + 1}.   │ {thisInv.Vstalks} stalk(s).│ {thisInv.Wstems} stem(s).│  {thisInv.Onectar} pint(s) of nectar.│ 
-══════════════════════════════════════════════════""")
+Your farm is tier {thisFarm.farmnumber + 1}.   │ {thisInv.Vstalks} stalk(s).│ {thisInv.Wstems} stem(s).│ {thisInv.Onectar} pint(s) of nectar. │ 
+════════════════════════════════════════════════════════════════════════""")
     cmds()
     thisFarm.growself()
